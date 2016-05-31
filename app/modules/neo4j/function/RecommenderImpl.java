@@ -46,6 +46,53 @@ public class RecommenderImpl implements Recommender {
 
     }
 
+     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> matchTagsString(String... tagsName) {
+        String querySuffix = "RETURN matched ORDER BY r.weight DESC";
+        String query = "";
+        boolean first = true;
+        for (String tname : tagsName) {
+            query += createQuery(tname, first);
+            first = false;
+        }
+        query += querySuffix;
+        List<String> recTagsName = new LinkedList<>();
+        sendQuery(query).forEach(t -> recTagsName.add(t.getName()));
+        return recTagsName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Iterable<Tag> matchTags(String... tagsName) {
+        String querySuffix = " RETURN matched ORDER BY r.weight DESC";
+        String query = "";
+        boolean first = true;
+        for (String tname : tagsName) {
+            query += createQuery(tname, first);
+            first = false;
+        }
+        query += querySuffix;
+        return sendQuery(query);
+    }
+
+    /**
+     * Create a query
+     */
+    private String createQuery(String tname, boolean first) {
+        String query = "";
+        if (first) {
+            query = "MATCH (:Tag {name:\"" + tname + "\"})-[r:RELATED_TO]-(matched)";
+        } else {
+            query += ", (:Tag {name:\"" + tname + "\"})-[:RELATED_TO]-(matched)";
+        }
+        return query;
+    }
+
     /**
      * Create a query
      */

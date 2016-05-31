@@ -28,4 +28,14 @@ public interface Recommender {
      */
     List<Iterable<Tag>> recommends(String... tagsNames);
 
+    /**
+     * Matches a the tags with its children and returns a list with the names
+     */
+    List<String> matchTagsString(String... tagsName);
+
+    /**
+     * Matches a the tags with its children and returns a list with the tags
+     */
+    Iterable<Tag> matchTags(String... tagsName);
+
 }
