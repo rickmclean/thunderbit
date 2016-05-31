@@ -33,7 +33,6 @@ public class Neo4JModule  extends AbstractModule {
         bind(TagService.class).to(TagServiceImpl.class);
         bind(TagController.class).to(TagControllerImpl.class);
         bind(Recommender.class).to(RecommenderImpl.class);
-        bind(Matcher.class).to(MatcherImpl.class);
         bind(RelationsUpdater.class).to(RelationsUpdaterImpl.class);
     }
 }
