@@ -28,7 +28,4 @@ public interface Recommender {
      */
     List<Iterable<Tag>> recommends(String... tagsNames);
 
-    Iterable<Tag> getrTag();
-
-    List<Iterable<Tag>> getrTags();
 }

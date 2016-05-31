@@ -29,9 +29,6 @@ public class RecommenderImpl implements Recommender {
     @Inject
     public Neo4JSessionProvider sessionProvider;
 
-    private Iterable<Tag> rTag;
-    private List<Iterable<Tag>> rTags;
-
     /**
      * {@inheritDoc}
      */
@@ -47,20 +44,6 @@ public class RecommenderImpl implements Recommender {
         queries.forEach(q -> results.add(sendQuery(q)));
         return toMaximumFive(results);
 
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Iterable<Tag> getrTag() {
-        return rTag;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List<Iterable<Tag>> getrTags() {
-        return rTags;
     }
 
     /**
