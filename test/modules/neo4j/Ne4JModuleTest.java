@@ -4,8 +4,6 @@ import modules.neo4j.controller.TagController;
 import modules.neo4j.controller.TagControllerImpl;
 import modules.neo4j.domain.Relation;
 import modules.neo4j.domain.Tag;
-import modules.neo4j.function.Matcher;
-import modules.neo4j.function.MatcherImpl;
 import modules.neo4j.function.Recommender;
 import modules.neo4j.function.RecommenderImpl;
 import modules.neo4j.service.TagService;
@@ -52,10 +50,6 @@ public class Ne4JModuleTest {
             Recommender recommender = application.injector().instanceOf(Recommender.class);
             assertThat("Recommender has not been mapped", recommender, notNullValue());
             assertThat("Recommender has been mapped to a wrong type", recommender instanceof RecommenderImpl, is(true));
-
-            Matcher matcher = application.injector().instanceOf(Matcher.class);
-            assertThat("Matcher has not been mapped", matcher, notNullValue());
-            assertThat("Matcher has been mapped to a wrong type", matcher instanceof MatcherImpl, is(true));
         });
     }
 
@@ -115,20 +109,14 @@ public class Ne4JModuleTest {
             assertThat("Items has not been saved", tagController.list().size(), equalTo(7));
             assertThat("Items has not been saved", tagController.list(), hasItems(t1, t2, t3, t4, t5, t6, t7));
 
-            Matcher m = application.injector().instanceOf(Matcher.class);
-
-            assertThat("Relations has not been saved", m.matchTagsString("t1", "t3").size(), equalTo(2));
-            assertThat("Relations has not been saved", m.matchTagsString("t1", "t3"), hasItems("t5", "t2"));
-
             Recommender r = application.injector().instanceOf(Recommender.class);
 
-            if (r.recommends(t1.getName(), t4.getName(), t3.getName())) {
-                r.getrTag().forEach(t -> System.out.println(t.getName()));
-            } else {
-                r.getrTags().forEach((l1) -> {
-                    l1.forEach(t -> System.out.println(t.getName()));
-                });
-            }
+            assertThat("Relations has not been saved", r.matchTagsString("t1", "t3").size(), equalTo(2));
+            assertThat("Relations has not been saved", r.matchTagsString("t1", "t3"), hasItems("t5", "t2"));
+
+            r.recommends(t1.getName(), t4.getName(), t3.getName()).forEach((l1) -> {
+                l1.forEach(t -> System.out.println(t.getName()));
+            });
         });
     }
 }
