@@ -35,26 +35,18 @@ public class RecommenderImpl implements Recommender {
     /**
      * {@inheritDoc}
      */
-    public boolean recommends(String... tagsNames) {
-        this.rTag = new LinkedList<>();
-        this.rTags = new LinkedList<>();
-        String querySuffix = " RETURN recommended";
-        if (tagsNames.length == 1) {
-            String query = createOneQuery(tagsNames[0]) + querySuffix;
-            Iterable<Tag> tags = sendQuery(query);
-            this.rTag = tags;
-            return true;
-        } else {
-            List<String> queries = new LinkedList<>();
-            for (String tname : tagsNames) {
-                String query = createOneQuery(tname) + querySuffix;
-                queries.add(query);
-            }
-            List<Iterable<Tag>> results = new LinkedList<>();
-            queries.forEach(q -> results.add(sendQuery(q)));
-            this.rTags = toMaximumFive(results);
-            return false;
+    public List<Iterable<Tag>> recommends(String... tagsNames) {
+        String querySuffix = " RETURN recommended ORDER BY r.weight DESC";
+        List<String> queries = new LinkedList<>();
+        for (String tname : tagsNames) {
+            String query = createOneQuery(tname) + querySuffix;
+            System.out.println("Recommender query: " + query);
+            queries.add(query);
         }
+        List<Iterable<Tag>> results = new LinkedList<>();
+        queries.forEach(q -> results.add(sendQuery(q)));
+        return toMaximumFive(results);
+
     }
 
     /**
@@ -75,7 +67,7 @@ public class RecommenderImpl implements Recommender {
      * Create a query
      */
     private String createOneQuery(String tname) {
-        return "MATCH (:Tag {name:\"" + tname + "\"})-[:RELATED_TO]-(recommended)";
+        return "MATCH (:Tag {name:\"" + tname + "\"})-[r:RELATED_TO]-(recommended)";
     }
 
     /**

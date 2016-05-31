@@ -23,9 +23,10 @@ import java.util.List;
 
 public interface Recommender {
     /**
-     * Returns true if its only one parameter, false if more than one parameter
+     * Returns a list of lists of related tags by each one of the tags passed as
+     * parameter
      */
-    boolean recommends(String... tagsNames);
+    List<Iterable<Tag>> recommends(String... tagsNames);
 
     Iterable<Tag> getrTag();
 
